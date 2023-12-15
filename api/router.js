@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { getTasks, createTask, updateTask, deleteTask,
 getSingleTask, deleteAllTasks, findDoneTasks,
 findPendingTasks, findLateTasks, findProcessingTasks,
-findNotAssignedTasks, patchTask} = require("./controllers/task");
+findNotAssignedTasks, patchTask} = require("../controllers/task");
 
 router.get("/task/pending", findPendingTasks);
 router.get("/task/late", findLateTasks);
