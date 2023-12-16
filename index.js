@@ -1,5 +1,5 @@
 const express = require("express");
-//const router = require("./api/router");
+const router = require("./api/router");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
@@ -24,11 +24,13 @@ app.get('/', (req, res) => {
     res.send('Hey this is my API running 🥳')
 })
 const res = require('./api/router.js');
-//const res = require('./api/router.js');
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-//app.use(router);
+app.use(router);
+
+/*
 app.use('/api/', res);
 app.use('/api/task', res);
 app.use('/api/task/pending', res);
@@ -37,7 +39,7 @@ app.use('/api/task/processing', res);
 app.use('/api/task/notassigned', res);
 app.use('/api/task/done', res);
 app.use('/api/task/:taskID', res);
-
+*/
 app.listen(PORT, async () => {
   console.log(`server up on port ${PORT}`);
 });
