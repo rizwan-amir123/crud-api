@@ -2,15 +2,14 @@ const express = require("express");
 const router = require("./router");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
 const dotenv = require("dotenv");
 dotenv.config();
 
 const PORT = 8000;
-
 const app = express();
 
-mongoose
-  .connect(process.env.MONGODB_URL, {
+mongoose.connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -34,4 +33,4 @@ app.listen(PORT, async () => {
 });
 
 
-module.exports = app;
+//module.exports = app;
