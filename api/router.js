@@ -14,11 +14,11 @@ router.post("/task", createTask);
 
 router.get("/task/:taskID", getSingleTask);
 router.get("/task", getTasks);
-router.get("/task/done", findDoneTasks);
-router.get("/task/pending", findPendingTasks);
-router.get("/task/late", findLateTasks);
-router.get("/task/processing", findProcessingTasks);
-router.get("/task/notassigned", findNotAssignedTasks);
+router.get("/task/status/done", findDoneTasks);
+router.get("/task/status/pending", findPendingTasks);
+router.get("/task/status/late", findLateTasks);
+router.get("/task/status/processing", findProcessingTasks);
+router.get("/task/status/unassigned", findNotAssignedTasks);
 
 router.get("/", (req, res) => {
   res.send("Let's build a CRUD API!");
