@@ -5,7 +5,7 @@ const { getTasks, createTask, updateTask, deleteTask,
 getSingleTask, deleteAllTasks, findDoneTasks,
 findPendingTasks, findLateTasks, findProcessingTasks,
 findNotAssignedTasks, patchTask} = require("../controllers/task");
-
+/*
 router.get("/task/pending", findPendingTasks);
 router.get("/task/late", findLateTasks);
 router.get("/task/processing", findProcessingTasks);
@@ -19,6 +19,7 @@ router.delete("/task/:taskID", deleteTask);
 router.put("/task/:taskID", updateTask);
 router.post("/task", createTask);
 router.get("/task", getTasks);
+*/
 router.get("/", (req, res) => {
   res.send("Let's build a CRUD API!");
 });
