@@ -182,7 +182,49 @@ const updateTask = (req, res) => {
       });
 }; 
 
+const findFrontendTasks = (req, res) => {
+  Task.find({tag: "frontend"})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: 
+      err.message || "error occured"
+  });
+  });
+};
+
+const findBackendTasks = (req, res) => {
+  Task.find({tag: "backend"})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: 
+      err.message || "error occured"
+  });
+  });
+};
+
+const findDevopsTasks = (req, res) => {
+  Task.find({tag: "devops"})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: 
+      err.message || "error occured"
+  });
+  });
+};
+
 module.exports = {
+  findDevopsTasks,
+  findFrontendTasks,
+  findBackendTasks,
   findPendingTasks,
   findNotAssignedTasks,
   findLateTasks,

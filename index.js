@@ -23,7 +23,7 @@ mongoose.connect(process.env.MONGODB_URL, {
 app.get('/', (req, res) => {
     res.send('Hey this is my API running 🥳')
 })
-const res = require('./api/router.js');
+//const res = require('./api/router.js');
 
 app.use(cors());
 app.use(express.json());
