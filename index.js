@@ -14,7 +14,7 @@ const session = require('express-session');
 const dotenv = require("dotenv");
 dotenv.config();
 
-const PORT = 3000;
+const PORT = 8080;
 const app = express();
 
 mongoose.connect(process.env.MONGODB_URL, {
