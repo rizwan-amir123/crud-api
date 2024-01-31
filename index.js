@@ -2,14 +2,11 @@ const express = require("express");
 const router = require("./api/router");
 const mongoose = require("mongoose");
 const cors = require("cors");
-
 const passport = require('passport');
 const GitHubStrategy = require('passport-github2').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-//const LocalStrategy = require('passport-local').Strategy;
-//const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const session = require('express-session');
+const session = require('express-session')
+
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -39,7 +36,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(router);
 
 // Configure session
-app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+app.use(session({ secret: 'T8oQ65gNRG(egC5a<mp_', resave: true, saveUninitialized: true }));
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -49,44 +46,29 @@ app.use(passport.session());
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET,
-  callbackURL: 'https://task-supervisor.vercel.app/auth/github/callback'
+  callbackURL: 'http://localhost:8080/auth/github/callback'
 },
 function (accessToken, refreshToken, profile, done) {
   // You can store user data in your database here
   return done(null, profile);
 }));
 
-// Google authentication strategy
-passport.use(new GoogleStrategy({
-  clientID: 'your-google-client-id',
-  clientSecret: 'your-google-client-secret',
-  callbackURL: 'http://localhost:3000/auth/google/callback'
-},
-function (accessToken, refreshToken, profile, done) {
-  // You can store user data in your database here
-  return done(null, profile);
-}));
 
-/*
+
 // Serialize and deserialize user for session management
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
-
+/*
 passport.deserializeUser(function (id, done) {
-  const user = users.find(u => u.id === id);
+  const user = User.find(u => u.id === id);
   done(null, user);
 });
 */
-
-// Generate JWT token
-function generateToken(user) {
-  const payload = { id: user.id, username: user.username, email: user.email };
-  const secretKey = 'your-secret-jwt-key';
-  const options = { expiresIn: '1h' }; // Set the expiration time as needed
-
-  return jwt.sign(payload, secretKey, options);
-}
+passport.deserializeUser(function (obj, done) {
+  //const user = User.find(u => u.id === id);
+  done(null, obj);
+});
 
 // Route to start GitHub authentication
 app.get('/auth/github',
@@ -95,28 +77,37 @@ app.get('/auth/github',
 
 // Callback route after GitHub has authenticated the user
 app.get('/auth/github/callback',
-  passport.authenticate('github', { failureRedirect: '/' }),
+  passport.authenticate('github', { /*successRedirect: '/auth/github/success',*/ failureRedirect: 'http://localhost:3000' }),
   function (req, res) {
+     // Successful authentication, redirect home.
+    //const username = req.user.username || req.user.displayName || req.user.email;
+    console.log("user:",req.user);
     // Successful authentication, generate JWT token and redirect home.
-    const token = generateToken(req.user);
-    res.cookie('jwt', token); // Set the token as a cookie
-    res.redirect('/');
+    //const token = generateToken(req.user);
+    //const token = "adada&6ad7ayd7"
+    //res.cookie('jwt', token); // Set the token as a cookie
+    res.redirect(`http://localhost:3000/user/query?name=${req.user.username}&link=${req.user.photos.value}`);
+    console.log("success");
   });
 
-// Route to start Google Sign-In
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
+  // Logout
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
 
-// Callback route after Google has authenticated the user
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
-  function (req, res) {
-    // Successful authentication, generate JWT token and redirect home.
-    const token = generateToken(req.user);
-    res.cookie('jwt', token); // Set the token as a cookie
-    res.redirect('/');
-  });
+// Protected route
+app.get('/profile', ensureAuthenticated, (req, res) => {
+  res.json(req.user);
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('http://localhost:3000/');
+}
+
 
 /*
 app.use('/api/', res);
@@ -131,6 +122,4 @@ app.use('/api/task/:taskID', res);
 app.listen(PORT, async () => {
   console.log(`server up on port ${PORT}`);
 });
-
-
 module.exports = app;
