@@ -33,6 +33,17 @@ const getTasks = (req, res) => {
       });
 };
 
+const getAssignees = (req, res) => {
+  Task
+      .distinct('assignee')
+      .then(data => res.json(data))
+      .catch (err => {
+          res.status(500).send({
+              message:err.message || "some error occured"
+          });
+      });
+};
+
 const deleteTask = (req, res) => {
   Task.deleteOne(
     { _id: req.params.taskID }
@@ -92,6 +103,19 @@ const findDoneTasks = (req, res) => {
 
 const findPendingTasks = (req, res) => {
   Task.find({status: "pending"})
+  .then(data => {
+    res.send(data);
+  })
+  .catch(err => {
+    res.status(500).send({
+      message: 
+      err.message || "error occured"
+  });
+  });
+};
+
+const getAssigneeTasks = (req, res) => {
+  Task.find({assignee: req.params.assignee})
   .then(data => {
     res.send(data);
   })
@@ -238,4 +262,6 @@ module.exports = {
   updateTask,
   getSingleTask,
   deleteTask,
+  getAssignees,
+  getAssigneeTasks,
 };
